@@ -1,8 +1,99 @@
-const express = require("express");
-const router = express.Router();
+const express = require('express')
+const router = express.Router()
+const authAdmin = require("../middlewares/authAdmin")
+const slugify = require('slugify')
+const Category = require("./Category")
 
-router.get('/', (req, res) => {
-    res.send("Hello World")
+
+
+
+router.get('/admin/categories', authAdmin ,(req, res) => {
+    
+    Category.findAll().then(categories => {
+
+        res.render('admin/categories/index', {categories})
+    })
 })
 
-module.exports = router
+
+router.get('/admin/categories/new', authAdmin ,(req, res) => {
+    res.render('admin/categories/new')
+})
+
+router.post('/categories/save',authAdmin ,(req, res) => {
+
+    let title = req.body.title
+
+    if(title != undefined) {
+
+        Category.create({
+            title: title,
+            slug: slugify(title)
+        }).then(() => {
+            res.redirect('/admin/categories/')
+        })
+    }else {
+        res.redirect('/admin/categories/new')
+    }
+})
+
+
+router.post('/categories/delete',authAdmin , (req, res) => {
+    var id = req.body.id 
+
+    if(id != undefined) {
+
+        if(!isNaN(id)) {
+            Category.destroy({
+                where: {
+                    id: id
+                }
+            }).then(() => {
+                res.redirect('/admin/categories') 
+            })
+
+        } else {
+            res.redirect('/admin/categories')  
+        }
+
+    }else {
+        res.redirect('/admin/categories')
+    }
+})
+
+router.get('/admin/categories/edit/:id', authAdmin ,(req, res) => {
+
+    var id = req.params.id 
+
+    if(isNaN(id)) {
+        res.redirect('/admin/categories')
+    }
+
+    Category.findByPk(id).then(category => {
+
+        if(category != undefined) {
+
+            res.render('admin/categories/edit', {category})
+        }else {
+            res.redirect('/admin/categories')
+        }
+    }).catch(error => {
+       res.redirect('/admin/categories')
+    })
+})
+
+router.post("/categories/update", authAdmin ,(req, res) => {
+ 
+    var id = req.body.id;
+    var title = req.body.title 
+
+    Category.update({title: title, slug: slugify(title)}, {
+        where: {
+            id: id
+        }
+    }).then(() => {
+        res.redirect("/admin/categories")
+    })
+})
+
+module.exports = router;

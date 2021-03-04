@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Ahegao - Editar Medias</title>
+        <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.5/build/pure-min.css" integrity="sha384-LTIDeidl25h2dPxrB2Ekgc9c7sEC3CWGM6HeFmuDNUjX76Ert4Z4IY714dhZHPLd" crossorigin="anonymous">
+        <link rel="stylesheet" href="/css/global.css">
+
+        <style>
+            div.container {
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+            }
+        </style>
+    </head>
+    <body>
+        
+
+        <div class="container">
+            <h1>Medias</h1>
+       
+        
+
+            <table class="pure-table pure-table-bordered">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Título</th>
+                        <th>Slug</th>
+                        <th>Path</th>
+                        <th>Ações</th>        
+                    </tr>
+                </thead>
+
+
+                <tbody>
+                    <% medias.forEach(media => { %>
+                        
+                        <tr>
+                            <td><%= media.id %></td>
+                            <td><%= media.title %></td>
+                            <td><%= media.slug %></td>
+                            <td><%= media.path %></td>
+                            <td>
+                        
+        
+                                <form method="POST" action="/medias/delete" style="display: inline;" onsubmit="confirmarDelecao(event, this)">
+                                    <input type="hidden" name="id" value="<%= media.id %>">
+                                    <input type="hidden" name="path" value="<%= media.path %>">
+                                    <button class="button-error pure-button">Deletar</button>
+                                </form>
+                            
+                            </td>
+                        </td>
+                    <% }) %>
+                </tbody>
+            </table><br>
+            <a href="/admin/medias/new" class="button-success pure-button">Criar nova media</a><br>
+        </div>
+    </body>
+
+    
+    <script>
+        const confirmarDelecao = (event, form) => {
+
+            event.preventDefault();
+
+            let decision = confirm("Tem certeza que deseja excluir essa categoria ?")
+
+            if(decision) {
+                form.submit()
+            }
+        }
+    </script>
+</html>

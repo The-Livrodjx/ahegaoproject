@@ -6,14 +6,42 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="/css/global.css">
         <link rel="stylesheet" href="/css/navbar.css">
+        <link rel="stylesheet" href="/css/style.css">
         <title>Ahegao - Você sabe que o site é bom</title>
     </head>
     <body>
         <%- include('./partials/navbar.ejs') -%>
         
-        <form method="post" action="/avatar" enctype="multipart/form-data">
-            <input type="file" name="avatar" accept="image/*, video/*">
-            <button type="submit">Upload</button>
-        </form>
+        <section class="home">
+            <div class="home-content">
+
+                <div class="cards">
+                    <% medias.forEach(media => { %>
+                        <div class="card">
+                            <img src="<%= media.path %>" alt="" width="150px" height="150px">
+                            <h2><%= media.title %></h2>
+
+                            <a href="/<%= media.slug %>" class="button-secondary pure-button">Assistir</a>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+        </section>
     </body>
+
+    <script>
+        let linkLogOut = document.querySelector("li a.logout")
+      
+        linkLogOut.onclick = (e) => {
+          e.preventDefault();
+      
+          let confirmed = confirm("Tem certeza que deseja sair ?")
+      
+          if(confirmed) {
+            window.location.href = 'http://localhost:6969/logout'
+          }
+      
+        }
+      </script>
+      
 </html>

@@ -2,15 +2,9 @@ const Sequelize = require("sequelize")
 
 const connection = require("../database/database")
 
-const Category = connection.define('categories', {
+const Category = connection.define("categories", {
 
-    id: {
-        type: Sequelize.INT,
-        allowNull: false,
-        primaryKey: true
-    },
-
-    name: {
+    title: {
         type: Sequelize.STRING,
         allowNull: false
     },

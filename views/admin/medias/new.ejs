@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/css/global.css">
+        <title>Ahegao - Cadastrar Categoria</title>
+        <style>
+            h1 {
+                margin-top: 10px;
+            }
+            form {
+                margin-top: 180px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+
+
+            <h1>Cadastro de Medias</h2>
+
+
+            <form  method="POST" enctype="multipart/form-data" onsubmit="validaForm(event)">
+                <input type="text" name="title" placeholder="Defina o título do vídeo"><br>
+                <input type="file" name="avatar" accept="image/*, video/*">
+                <select name="category" id="">
+                    <% categories.forEach(category => { %>
+                        <option value="<%= category.id %>"><%= category.title %></option>
+                    <% }) %>
+                </select>
+                <button class="button-secondary pure-button" type="submit">Upload</button>
+            </form>
+
+
+        </div>
+    </body>
+
+
+    <script>
+        function validaForm (frm) {
+            frm.preventDefault()
+            /*
+            o parâmetro frm desta função significa: this.form,
+            pois a chamada da função - validaForm(this) foi
+            definida na tag form.
+            */
+            //Verifica se o campo nome foi preenchido e
+            //contém no mínimo três caracteres.
+            if(frm.target.title.value === "" || frm.target.title.value === null || frm.target.title.value.lenght < 3) {
+                //É mostrado um alerta, caso o campo esteja vazio.
+                alert("Por favor, digite um título de categoria.");
+                //Foi definido um focus no campo.
+                frm.target.title.focus();
+                //o form não é enviado.
+                return false;
+            }
+        
+            if(frm.target.title.value.indexOf('<') !== -1 || 
+            frm.target.title.value.indexOf('>') !== -1 ||
+            frm.target.title.value.indexOf('/') !== -1 ) {
+                //É mostrado um alerta, caso o campo esteja vazio.
+                alert("Por favor, não use caracteres especiais.");
+                
+                frm.target.title.value = ""
+            
+        
+                return false;
+            }
+            else {
+                
+                frm.target.action = '/uploadsave';
+                frm.target.method = 'POST';
+                frm.target.submit();
+            }
+        }
+    </script>
+</html>

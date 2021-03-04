@@ -10,8 +10,14 @@ const PORT = process.env.PORT || 6969
 
 const connection = require("./database/database")
 
+const Category = require("./categories/Category");
+const categoriesController = require("./categories/CategoriesController");
+
 const User = require("./users/User");
 const usersController = require("./users/UsersController")
+
+const Media = require("./medias/Media")
+const mediasController = require("./medias/MediasController")
 
 
 connection.
@@ -36,27 +42,103 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.use('/', usersController)
-
-const upload = multer({
-    storage: multer.diskStorage({
-      destination: 'public/uploads/',
-      filename(req, file, callback) {
-        const fileName = `${uuid()}-${file.originalname}`
-  
-        return callback(null, fileName)
-      },
-    }),
-})
+app.use('/', categoriesController)
+app.use('/', mediasController)
 
 app.get("/", authUser, (req, res) => {
-    res.render("index");
+
+    Media.findAll({
+        order: [
+            ['id', 'DESC']
+        ],
+        limit: 6
+
+    }).then(medias => {
+
+        if(req.session.user) {
+
+            User.findOne({
+                where: {
+                    name: req.session.user.name
+                }
+            }).then(user => {
+
+                Category.findAll().then(categories => {
+
+                    res.render("index", {categories: categories, medias: medias, user: user});
+                })
+            })
+        }
+    })
 })
 
+app.get("/:slug", authUser, (req, res) => {
 
-app.post('/avatar', upload.single('avatar'), function (req, res) {
-    const { filename, size } = req.file
-  
-    return res.render('avatar', { image: `/uploads/${filename}`, size })
+    let slug = req.params.slug
+
+    if(isNaN(slug) && slug !== undefined) {
+        Media.findOne({
+            where: {
+                slug: slug
+            }
+        }).then(media => {
+
+            if(media !== undefined && media !== null) {
+                Category.findAll().then(categories => {
+
+                    res.render("media", {media: media, categories: categories})
+                })
+            }
+            else {
+                res.redirect("/")
+            }
+    
+
+        }).catch(err => {
+            res.redirect("/")
+        })
+    }
+    else {
+        res.redirect("/")
+    }
+})
+
+app.get('/category/:slug', authUser,  (req, res) => {
+
+    let slug = req.params.slug
+
+    Category.findOne({
+        where: {
+            slug: slug
+        },
+        include: [{model: Media}]
+
+    }).then(category => {
+        if(category !== undefined) {
+            
+            if(req.session.user) {
+
+                User.findOne({
+                    where: {
+                        name: req.session.user.name
+                    }
+                }).then(user => {
+                    Category.findAll().then(categories => {
+                
+                        res.render('index', {categories: categories, medias: category.medias, user: user})
+                    })
+                })
+            }
+            else {
+                res.redirect('/')
+            }
+        }
+        else {
+            res.redirect("/")
+        }
+    }).catch(err => {
+        res.redirect("/")
+    })
 })
 
 app.listen(PORT, () => {console.log(`Server listening at port: ${PORT}`)})
