@@ -19,6 +19,7 @@ const usersController = require("./users/UsersController")
 const Media = require("./medias/Media")
 const mediasController = require("./medias/MediasController")
 
+const __rootpath = __dirname
 
 connection.
     authenticate()

@@ -1,6 +1,6 @@
 const express = require("express");
 const authAdmin = require("../middlewares/authAdmin");
-const slugify = require("slugify")
+const slugify = require("slugify");
 const router = express.Router();
 const { uuid } = require('uuidv4')
 const multer = require('multer')
@@ -8,17 +8,6 @@ const Category = require("../categories/Category")
 const Media = require("./Media")
 const fs = require('fs')
 
-
-const upload = multer({
-    storage: multer.diskStorage({
-      destination: 'public/uploads/',
-      filename(req, file, callback) {
-        const fileName = `${uuid()}-${file.originalname}`
-  
-        return callback(null, fileName)
-      },
-    }),
-})
 
 
 router.get("/admin/medias", authAdmin, (req, res) => {
@@ -42,11 +31,36 @@ router.get("/admin/medias/new", authAdmin, (req, res) => {
     })
 })
 
-router.post('/uploadsave', upload.single('avatar'), function (req, res) {
+// const upload = multer({
+//     storage: multer.diskStorage({
+//       destination: 'public/uploads/',
+//       filename(req, file, callback) {
+     
+//         return callback(null, file.fieldname = `${uuid()}-${path.extname(file.originalname)}`)
+//       },
+//     }),
+// })
+
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, "public/uploads");
+    },
+    filename: function (req, file, cb) {
+        return cb(null, file.fieldname = `${uuid()}-${file.originalname}`)
+    },
+});
+  
+var upload = multer({ storage: storage });
+  
+var uploadMultiple = upload.fields([{ name: 'media', maxCount: 1 }, { name: 'thumbnail', maxCount: 1 }])
+
+router.post('/uploadsave', uploadMultiple, function (req, res) {
 
     let title = req.body.title
     let category = req.body.category
-    const { filename, size } = req.file
+    const filename  = req.files.media[0].fieldname
+    const thumbnailFileName = req.files.thumbnail[0].fieldname
+
     
     if(title !== null || undefined && category !== null || undefined) {
 
@@ -62,10 +76,11 @@ router.post('/uploadsave', upload.single('avatar'), function (req, res) {
                     title: title,
                     slug: slugify(title),
                     path: `/uploads/${filename}`,
+                    thumbnailPath: `/uploads/${thumbnailFileName}`,
                     categoryId: category
                 }).then(() => {
         
-                    res.redirect("admin/medias/index")
+                    res.redirect("admin/medias")
                 })
                 .catch(err => {
                     res.redirect('/admin/medias')
@@ -85,10 +100,11 @@ router.post('/uploadsave', upload.single('avatar'), function (req, res) {
         res.redirect("/")
     }
 
-
+   
     // return res.render('avatar', { image: `/uploads/${filename}`, size })
 
     res.redirect("/admin/medias")
+
 })
 
 router.post('/medias/delete', authAdmin , (req, res) => {

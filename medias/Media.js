@@ -18,6 +18,11 @@ const Media = connection.define('medias', {
     path: {
         type: Sequelize.TEXT,
         allowNull: false
+    },
+
+    thumbnailPath: {
+        type: Sequelize.TEXT,
+        allowNull: false
     }
 })
 
