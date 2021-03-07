@@ -18,9 +18,10 @@
                 <div class="cards">
                     <% medias.forEach(media => { %>
                         <div class="card">
-                            <img src="<%= media.thumbnailPath %>" alt="" width="150px" height="150px">
+                            <video class="preview" width="150px" height="150px" src="<%= media.path %>"></video>
                             <h2><%= media.title %></h2>
-
+                            
+                            <p class="test"></p>
                             <a href="/<%= media.slug %>" class="button-secondary pure-button">Assistir</a>
                         </div>
                     <% }) %>
@@ -42,6 +43,27 @@
           }
       
         }
-      </script>
+
+        document.querySelectorAll('video.preview').forEach(video => {
+
+            video.onmouseover = (e) => {
+                let currentVideo = e.target
+
+                
+                currentVideo.toggleAttribute("controls")
+            } 
+
+
+            video.onmouseleave = (e) => {
+                let currentVideo = e.target
+
+                
+                currentVideo.toggleAttribute("controls")
+            }
+        })
+
+        
+
+    </script>
       
 </html>

@@ -15,7 +15,7 @@
         <% categories.forEach(category => { %>
           <li><a class="scrollTo navLink" href="/category/<%= category.slug %>"><%= category.title %></a></li>
         <% }) %>
-        <li><a class="scrollTo navLink" href="/">Logado como: <%= user.name %></a></li>
+        <li><a class="scrollTo navLink" href="/profile/<%= user.name %>">Logado como: <%= user.name %></a></li>
         <li><a class="scrollTo navLink logout" href="/logout">Logout</a></li>
 
       </ul>

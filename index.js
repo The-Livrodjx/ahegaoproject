@@ -52,8 +52,8 @@ app.get("/", authUser, (req, res) => {
         order: [
             ['id', 'DESC']
         ],
-        limit: 6
-
+        limit: 6,
+        include: [{model: Category}]
     }).then(medias => {
 
         if(req.session.user) {

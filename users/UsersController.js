@@ -1,8 +1,9 @@
 const express = require("express");
-const session = require("express-session")
+
 const router = express.Router();
 const bcrypt = require("bcryptjs")
-const User = require("./User")
+const User = require("./User");
+const authUser = require("../middlewares/authUser");
 
 
 router.get("/login", (req, res) => {
@@ -96,4 +97,63 @@ router.get('/logout', (req, res) => {
     res.redirect('/login')
 })
 
+router.get('/profile/:user', authUser, (req, res) => {
+
+    let user = req.params.user;
+
+    if(user !== undefined && isNaN(user)) {
+        
+        User.findOne({
+            where: {
+                name: user
+            }
+        }).then(user => {
+
+            var isTheSameUser;
+
+            if(user.name == req.session.user.name) {
+
+                isTheSameUser = true;
+
+            } else {
+                
+                isTheSameUser = false;
+            }
+
+
+            res.render('users/profile', {user: user,  isTheSameUser: isTheSameUser})
+
+        }).catch(err => {
+            res.redirect('/')
+        })
+    }
+    else {
+        res.redirect('/')
+    }
+})
+
+router.post('/profile/save', authUser, (req, res) => {
+
+    let id = req.body.id;
+    let name = req.body.name;
+    let profileImage = req.body.profileImage;
+    let quotation = req.body.quotation;
+    
+    let stillTheSame;
+
+    req.session.user.name !== name ? stillTheSame = false : stillTheSame = true;
+    
+    User.update({name: name, profileImage: profileImage, quotation: quotation}, {where: {id: id}})
+        .then(() => {
+            
+            if(stillTheSame) {
+                res.redirect(`/`)
+            }else {
+                res.redirect('/login')
+            }
+    
+        }).catch(err => {
+            res.redirect('/')
+        })
+})
 module.exports = router
