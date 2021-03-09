@@ -52,7 +52,7 @@ app.get("/", authUser, (req, res) => {
         order: [
             ['id', 'DESC']
         ],
-        limit: 6,
+        limit: 8,
         include: [{model: Category}]
     }).then(medias => {
 

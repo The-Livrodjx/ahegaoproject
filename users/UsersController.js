@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs")
 const User = require("./User");
+const Media = require("../medias/Media")
 const authUser = require("../middlewares/authUser");
 
 
@@ -60,7 +61,7 @@ router.post("/saveuser", (req, res) => {
 
     User.findOne({
         where: {
-            email: email
+            name: name
         }
     }).then(user => {
         
@@ -120,8 +121,20 @@ router.get('/profile/:user', authUser, (req, res) => {
                 isTheSameUser = false;
             }
 
+            Media.findAndCountAll({
+                where: {
+                    userId: user.id
+                },
+                limit: 3,
+                order: [['id', 'DESC']]
+            }).then(medias => {
 
-            res.render('users/profile', {user: user,  isTheSameUser: isTheSameUser})
+                res.render('users/profile', {user: user,  isTheSameUser: isTheSameUser, medias: medias})
+
+            }).catch(err => {
+                res.redirect('/')
+            })
+
 
         }).catch(err => {
             res.redirect('/')

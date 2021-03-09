@@ -63,8 +63,31 @@
                 </div>
 
                 <div class="quote" style="margin-left: 30px; margin-top: 30px">
-                    <p>"<%= user.quotation %>" - <%= user.name %></p>
+                    <p>"<%= user.quotation %>" - <%= user.name %></p><br>
                 </div>
+
+                <a href="#" style="position: absolute; right: 10%;color: #222;"><img src="/images/plus.svg" alt="" width="50px" height="50px"></a>
+                <h4>Vídeos postados recentemente: </h4><br><br> 
+                <% if(medias.count != 0) { %>
+                    
+                    <div class="cards">
+                        <% medias.rows.forEach(media => { %>
+
+                           
+                            <div class="card">
+                                <video class="preview" ontimeupdate="getVideoDuration(this, '<%= media.slug %>') "width="150px" height="150px" src="<%= media.path %>"></video>
+                                <h2><%= media.title %></h2>
+                                    
+                                <p class="<%= media.slug %>" id="<%= media.slug %>"></p>
+                                <a href="/watch?id=<%= media.id %>" class="button-secondary pure-button">Assistir</a>
+                            </div>
+                       
+                        <% }) %>
+                    </div>
+                <% } else { %>
+
+                    <p>O usuário ainda não postou nenhum vídeo</p>
+                <% } %>
             </div>
 
 
@@ -86,15 +109,36 @@
         
         <% } else { %>
 
-            <div class="main_container" style="margin: 30px 0px 0px 50px;">
+            <div class="main_container" style="margin: 30px 0px 0px 50px;min-height: 700px;display: flex;flex-direction: column;align-items: flex-start;justify-content: flex-start;">
                 <div class="profile-image" style="display: inline-flex;"><img src="<%= user.profileImage %>" alt="" style="border-radius: 50%;" width="150" height="150">
-                    <h2 style="margin-top: 50px; margin-left: 30px;"><%= user.name %></h2>      
+                    <h2 style="margin-top: 50px;margin-left: 30px"><%= user.name %></h2>      
                 </div>
 
-                <div class="quote" style="margin-left: 30px; margin-top: 30px;margin-bottom: 50px;">
+                <div class="quote" style="margin: 20px 0px">
                     <p>"<%= user.quotation %>" - <%= user.name %></p>
                 </div>
 
+                <h4>Vídeos postados recentemente: </h4>
+                <% if(medias.count != 0) { %>
+                    
+                    <div class="cards" style="position: relative !important;">
+                        <% medias.rows.forEach(media => { %>
+
+                           
+                            <div class="card" style="position: relative;">
+                                <video class="preview" ontimeupdate="getVideoDuration(this, '<%= media.slug %>') "width="150px" height="150px" src="<%= media.path %>"></video>
+                                <h2><%= media.title %></h2>
+                                    
+                                <p class="<%= media.slug %>" id="<%= media.slug %>"></p>
+                                <a href="/watch?id=<%= media.id %>" class="button-secondary pure-button">Assistir</a>
+                            </div>
+                       
+                        <% }) %>
+                    </div>
+                <% } else { %>
+
+                    <p style="margin-top: 20px">O usuário ainda não postou nenhum vídeo</p>
+                <% } %>
                 
                 <a href="/" class="comeBackHome">
                     <span class="icon"><i class="fas fa-arrow-left"></i></span>
@@ -224,6 +268,78 @@
                 frm.target.submit();
             }
         }
+
+        function getVideoDuration(video, videoID) {
+
+        
+            var tempo = video.duration
+            var horas = Math.floor(tempo / 3600);
+            var minutos = Math.floor((tempo - (horas * 3600)) / 60);
+            var segundos = Math.floor(tempo % 60);
+                    
+            if (horas < 10) horas = '0' + horas;
+            if (minutos < 10) minutos = '0' + minutos;
+            if (segundos < 10) segundos = '0' + segundos;
+
+            var tempoAtual = video.currentTime
+            var horas2 = Math.floor(tempoAtual / 3600);
+            var minutos2 = Math.floor((tempoAtual - (horas2 * 3600)) / 60);
+            var segundos2 = Math.floor(tempoAtual % 60);
+                    
+            if (horas2 < 10) horas2 = '0' + horas2;
+            if (minutos2 < 10) minutos2 = '0' + minutos2;
+            if (segundos2 < 10) segundos2 = '0' + segundos2;
+
+                
+
+            return document.getElementById(`${videoID}`).innerHTML = horas2 + ':' + minutos2 + ':' + segundos2 + '/' + horas + ':' + minutos + ':' + segundos 
+            }
+
+            var allTheVideos = document.querySelectorAll('video.preview')
+            var valueOfTheLoop = allTheVideos.length // To fazendo isso pra arrumar o bug do window.onload aqui em baixo
+            // var videosDurations = []
+
+            allTheVideos.forEach((video, index) => {
+
+            // window.onload = (e) => {
+            //     console.log(video)
+
+            //     var videosDurations = []        
+                    
+            //     for(i = 0; i < valueOfTheLoop; i++ ) {
+
+            //         videosDurations[i] = video.duration
+
+            // }
+
+
+            // video.onloadeddata = function(e) {        
+                    
+                
+            //     video.duration;
+
+            //     return videosDurations[index] = video.duration
+            
+            // };
+
+
+            video.onmouseover = (e) => {
+                let currentVideo = e.target
+
+                    
+                currentVideo.toggleAttribute("controls")
+            } 
+
+
+            video.onmouseleave = (e) => {
+                let currentVideo = e.target
+
+                    
+                currentVideo.toggleAttribute("controls")
+            }
+
+        })
+
 
 	</script>
 </html>

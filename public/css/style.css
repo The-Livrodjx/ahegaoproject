@@ -17,12 +17,14 @@ section.home {
 section.home div.home-content {
     width: 100%;
     min-height: 900px;
+    height: auto;
     position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-  }
+    margin-top: 90px;
+}
   
 div.cards {
     width: 100%;
@@ -34,14 +36,14 @@ div.cards {
 }
   
 div.card {
-    background-color: #fff;
+    background-color: whitesmoke;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     width: 300px;
     height: 300px;
-    margin: 10px 30px;
+    margin: 10px 5px;
     padding: 5px;
     text-align: center;
     border: 1px solid #ccc;
@@ -52,13 +54,13 @@ div.card h2 {
     color: #222;
     padding: 5px;
     margin-bottom: 5px;
-    font-size: 22px;
+    font-size: 18px;
 }
   
-div.card img {
-    max-width: 100px;
-    height: 100px;
-    margin: 10px 0;
+div.card video {
+    width: 250px;
+    height: 150px;
+    margin: 0px
 }
 
 div.card a {
