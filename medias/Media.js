@@ -29,7 +29,8 @@ const Media = connection.define('medias', {
 
 Category.hasMany(Media) // Relationship: Category has many medias / categorias tem muitas medias (videos, imagens)
 Media.belongsTo(Category) // Relationship: An media belongs to a category / Uma media pertence a uma categoria
-User.hasMany(Media) // Relationship: An User has many media / Um usuário tem muitas medias
+Media.belongsTo(User) // Relationship: An media belongs to a user / Uma media pertence a um usuário
+User.hasMany(Media)  // Relationship: An User has many media / Um usuário tem muitas medias
 
 
 

@@ -53,8 +53,8 @@ app.get("/", authUser, (req, res) => {
             ['id', 'DESC']
         ],
         limit: 8,
-        include: [{model: Category}]
-    }).then(medias => {
+        include: {model: User}
+    }).then((medias) => {
 
         if(req.session.user) {
 
@@ -63,13 +63,22 @@ app.get("/", authUser, (req, res) => {
                     name: req.session.user.name
                 }
             }).then(user => {
-
+    
                 Category.findAll().then(categories => {
-
-                    res.render("index", {categories: categories, medias: medias, user: user});
+                    
+                    // User.findOne({
+                    //     where: {
+                    //         id:  medias[0].userId
+                    //     }
+                    // }).then(author => {
+                    res.render("index", {categories: categories, medias: medias, user: user, author: medias.user}); //, author: author.name}
+                    // })
+       
                 })
             })
         }
+        
+        
     })
 })
 
@@ -112,7 +121,8 @@ app.get('/category/:slug', authUser,  (req, res) => {
         where: {
             slug: slug
         },
-        include: [{model: Media}]
+        include: [{model: Media, include: [{model: User}]}],
+    
 
     }).then(category => {
         if(category !== undefined) {
@@ -140,6 +150,7 @@ app.get('/category/:slug', authUser,  (req, res) => {
     }).catch(err => {
         res.redirect("/")
     })
+    
 })
 
 app.get('/watch', authUser, (req, res) => {

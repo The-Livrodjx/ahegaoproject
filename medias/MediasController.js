@@ -1,11 +1,13 @@
 const express = require("express");
 const authAdmin = require("../middlewares/authAdmin");
+const authUser = require("../middlewares/authUser");
 const slugify = require("slugify");
 const router = express.Router();
 const { uuid } = require('uuidv4')
 const multer = require('multer')
 const Category = require("../categories/Category")
 const Media = require("./Media")
+const User = require("../users/User")
 const fs = require('fs')
 
 
@@ -54,13 +56,36 @@ var upload = multer({ storage: storage });
   
 var uploadMultiple = upload.fields([{ name: 'media', maxCount: 1 }, { name: 'thumbnail', maxCount: 1 }])
 
-router.post('/uploadsave', uploadMultiple, function (req, res) {
+
+
+
+
+router.get("/newupload", authUser, (req, res) => {
+
+    Category.findAll().then(categories => {
+
+        User.findOne({
+            where: {id: req.session.user.id}
+        }).then(user => {
+
+            if(user !== undefined) {
+                res.render("videos/new", {categories: categories, user: user})
+            }
+        })
+        .catch(err => {
+            res.redirect("/")
+        })
+
+    })
+})
+
+router.post('/uploadsave', authUser, uploadMultiple, function (req, res) {
 
     let title = req.body.title
     let category = req.body.category
     const filename  = req.files.media[0].fieldname
     const thumbnailFileName = req.files.thumbnail[0].fieldname
-
+    let userId = req.body.id
     
     if(title !== null || undefined && category !== null || undefined) {
 
@@ -77,21 +102,22 @@ router.post('/uploadsave', uploadMultiple, function (req, res) {
                     slug: slugify(title),
                     path: `/uploads/${filename}`,
                     thumbnailPath: `/uploads/${thumbnailFileName}`,
-                    categoryId: category
+                    categoryId: category,
+                    userId: userId
                 }).then(() => {
         
-                    res.redirect("admin/medias")
+                    res.redirect("/profile/" + req.session.user.name)
                 })
                 .catch(err => {
-                    res.redirect('/admin/medias')
-                })
+                    res.redirect("/profile/" + req.session.user.name)
+               })
             }
             else {
-                res.redirect('/admin/medias')
-            }
+                res.redirect('/')
+           }
 
         }).catch(err => {
-            res.redirect('/admin/medias/new')
+            res.redirect('/newupload')
         })
     
     }
@@ -100,10 +126,7 @@ router.post('/uploadsave', uploadMultiple, function (req, res) {
         res.redirect("/")
     }
 
-   
     // return res.render('avatar', { image: `/uploads/${filename}`, size })
-
-    res.redirect("/admin/medias")
 
 })
 
