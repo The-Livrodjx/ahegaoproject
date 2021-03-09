@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="/css/global.css">
         <link rel="stylesheet" href="/css/navbar.css">
         <link rel="stylesheet" href="/css/style.css">
+        <link rel="shortcut icon" href="/images/logo.png" type="image/x-icon">
         <title>Ahegao - Você sabe que o site é bom</title>
     </head>
     <body>
@@ -18,11 +19,11 @@
                 <div class="cards">
                     <% medias.forEach(media => { %>
                         <div class="card">
-                            <video class="preview" width="150px" height="150px" src="<%= media.path %>"></video>
+                            <video class="preview" ontimeupdate="getVideoDuration(this, '<%= media.slug %>') "width="150px" height="150px" src="<%= media.path %>"></video>
                             <h2><%= media.title %></h2>
                             
-                            <p class="test"></p>
-                            <a href="/<%= media.slug %>" class="button-secondary pure-button">Assistir</a>
+                            <p class="<%= media.slug %>" id="<%= media.slug %>"></p>
+                            <a href="/watch?id=<%= media.id %>" class="button-secondary pure-button">Assistir</a>
                         </div>
                     <% }) %>
                 </div>
@@ -31,6 +32,7 @@
     </body>
 
     <script>
+    
         let linkLogOut = document.querySelector("li a.logout")
       
         linkLogOut.onclick = (e) => {
@@ -44,12 +46,66 @@
       
         }
 
-        document.querySelectorAll('video.preview').forEach(video => {
+
+
+        function getVideoDuration(video, videoID) {
+
+            console.log(videoID)
+            var tempo = video.duration
+            var horas = Math.floor(tempo / 3600);
+            var minutos = Math.floor((tempo - (horas * 3600)) / 60);
+            var segundos = Math.floor(tempo % 60);
+                    
+            if (horas < 10) horas = '0' + horas;
+            if (minutos < 10) minutos = '0' + minutos;
+            if (segundos < 10) segundos = '0' + segundos;
+
+            var tempoAtual = video.currentTime
+            var horas2 = Math.floor(tempoAtual / 3600);
+            var minutos2 = Math.floor((tempoAtual - (horas2 * 3600)) / 60);
+            var segundos2 = Math.floor(tempoAtual % 60);
+                    
+            if (horas2 < 10) horas2 = '0' + horas2;
+            if (minutos2 < 10) minutos2 = '0' + minutos2;
+            if (segundos2 < 10) segundos2 = '0' + segundos2;
+
+                
+
+            return document.getElementById(`${videoID}`).innerHTML = horas2 + ':' + minutos2 + ':' + segundos2 + '/' + horas + ':' + minutos + ':' + segundos 
+        }
+
+        var allTheVideos = document.querySelectorAll('video.preview')
+        var valueOfTheLoop = allTheVideos.length // To fazendo isso pra arrumar o bug do window.onload aqui em baixo
+        // var videosDurations = []
+
+        allTheVideos.forEach((video, index) => {
+
+            // window.onload = (e) => {
+            //     console.log(video)
+
+            //     var videosDurations = []        
+                    
+            //     for(i = 0; i < valueOfTheLoop; i++ ) {
+
+            //         videosDurations[i] = video.duration
+
+            // }
+            
+
+            // video.onloadeddata = function(e) {        
+                    
+                
+            //     video.duration;
+    
+            //     return videosDurations[index] = video.duration
+               
+            // };
+
 
             video.onmouseover = (e) => {
                 let currentVideo = e.target
 
-                
+                    
                 currentVideo.toggleAttribute("controls")
             } 
 
@@ -57,13 +113,30 @@
             video.onmouseleave = (e) => {
                 let currentVideo = e.target
 
-                
+                    
                 currentVideo.toggleAttribute("controls")
             }
-        })
-
         
+        })
+        
+        // document.querySelectorAll('div.card .test').forEach((print, index) => {
+            
+        //     console.log(videosDurations)
+        //     var tempo = videosDurations[index]
+        //     var horas = Math.floor(tempo / 3600);
+        //     var minutos = Math.floor((tempo - (horas * 3600)) / 60);
+        //     var segundos = Math.floor(tempo % 60);
+                    
+        //     if (horas < 10) horas = '0' + horas;
+        //     if (minutos < 10) minutos = '0' + minutos;
+        //     if (segundos < 10) segundos = '0' + segundos;
 
+                    
+                
+
+        //     return print.innerHTML = horas + ':' + minutos + ':' + segundos         
+        // })
+    
     </script>
       
 </html>

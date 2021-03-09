@@ -66,6 +66,13 @@ form button:hover, a:hover {
 }
 
 .button-secondary {
-    background: rgb(66, 184, 221);
+    background: #222;
     /* this is a light blue */
+}
+
+.registerLink {
+    border: none;
+    margin: 0;
+    width: 300px;
+    text-decoration: none;
 }

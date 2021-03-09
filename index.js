@@ -73,7 +73,7 @@ app.get("/", authUser, (req, res) => {
     })
 })
 
-app.get("/:slug", authUser, (req, res) => {
+app.get("/watch/:slug", authUser, (req, res) => {
 
     let slug = req.params.slug
 
@@ -140,6 +140,36 @@ app.get('/category/:slug', authUser,  (req, res) => {
     }).catch(err => {
         res.redirect("/")
     })
+})
+
+app.get('/watch', authUser, (req, res) => {
+    let id = req.query.id
+
+    if(id !== undefined) {
+        Media.findOne({
+            where: {
+                id: id
+            }
+        }).then(media => {
+
+            if(media !== undefined && media !== null) {
+                Category.findAll().then(categories => {
+
+                    res.render("media", {media: media, categories: categories})
+                })
+            }
+            else {
+                res.redirect("/")
+            }
+    
+
+        }).catch(err => {
+            res.redirect("/")
+        })
+    }
+    else {
+        res.redirect("/")
+    }
 })
 
 app.listen(PORT, () => {console.log(`Server listening at port: ${PORT}`)})

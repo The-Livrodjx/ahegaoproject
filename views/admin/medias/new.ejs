@@ -27,7 +27,7 @@
             <form  method="POST" enctype="multipart/form-data" onsubmit="validaForm(event)">
                 <input type="text" name="title" placeholder="Defina o título do vídeo"><br>
                 <label for="">Vídeo: </label><br>
-                <input name="media" type="file" accept="video/*">
+                <input name="media" type="file" accept="video/*" required>
 
                 <label for="">Thumbnail: </label>
                 <input name="thumbnail" type="file" accept="image/*">
@@ -56,10 +56,18 @@
             //contém no mínimo três caracteres.
             if(frm.target.title.value === "" || frm.target.title.value === null || frm.target.title.value.lenght < 3) {
                 //É mostrado um alerta, caso o campo esteja vazio.
-                alert("Por favor, digite um título de categoria.");
+                alert("Por favor, digite o título.");
                 //Foi definido um focus no campo.
                 frm.target.title.focus();
                 //o form não é enviado.
+                return false;
+            }
+
+            if(frm.target.title.value.lenght >= 60) {
+                alert("Limite de 60 caracteres excedido")
+
+                frm.target.title.focus();
+
                 return false;
             }
         

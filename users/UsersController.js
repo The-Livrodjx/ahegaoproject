@@ -47,7 +47,7 @@ router.post('/authenticate', (req, res) => {
 })
 
 
-router.get("/users/create", (req, res) => {
+router.get("/register", (req, res) => {
 
     res.render('users/create')
 })
