@@ -24,13 +24,13 @@
             <h1>Cadastro de Medias</h2>
 
 
-            <form  method="POST" enctype="multipart/form-data" onsubmit="validaForm(event)">
+            <form onsubmit="validaForm(event)" enctype="multipart/form-data">
                 <input type="text" name="title" placeholder="Defina o título do vídeo"><br>
                 <label for="">Vídeo: </label><br>
                 <input name="media" type="file" accept="video/*" required>
 
                 <label for="">Thumbnail: </label>
-                <input name="thumbnail" type="file" accept="image/*">
+                <input name="thumbnail" type="file" accept="image/*" required>
                 <select name="category" id="">
                     <% categories.forEach(category => { %>
                         <option value="<%= category.id %>"><%= category.title %></option>
@@ -55,20 +55,12 @@
             */
             //Verifica se o campo nome foi preenchido e
             //contém no mínimo três caracteres.
-            if(frm.target.title.value === "" || frm.target.title.value === null || frm.target.title.value.lenght < 3) {
+            if(frm.target.title.value === "" || frm.target.title.value === null || frm.target.title.value.lenght < 3 || frm.target.title.value.lenght >= 30) {
                 //É mostrado um alerta, caso o campo esteja vazio.
-                alert("Por favor, digite o título.");
+                alert("Título inválido");
                 //Foi definido um focus no campo.
                 frm.target.title.focus();
                 //o form não é enviado.
-                return false;
-            }
-
-            if(frm.target.title.value.lenght >= 60) {
-                alert("Limite de 60 caracteres excedido")
-
-                frm.target.title.focus();
-
                 return false;
             }
         

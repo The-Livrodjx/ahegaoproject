@@ -52,7 +52,7 @@ app.get("/", authUser, (req, res) => {
         order: [
             ['id', 'DESC']
         ],
-        limit: 8,
+        limit: 12,
         include: {model: User}
     }).then((medias) => {
 
@@ -71,7 +71,7 @@ app.get("/", authUser, (req, res) => {
                     //         id:  medias[0].userId
                     //     }
                     // }).then(author => {
-                    res.render("index", {categories: categories, medias: medias, user: user, author: medias.user}); //, author: author.name}
+                    res.render("index", {categories: categories, medias: medias, user: user}); //, author: author.name}
                     // })
        
                 })
@@ -182,5 +182,63 @@ app.get('/watch', authUser, (req, res) => {
         res.redirect("/")
     }
 })
+
+app.get("/page/:num", authUser, (req, res) => {
+    
+    let page = req.params.num 
+    let offset = 0;
+
+    if(isNaN(page) || page == 1) {
+        offset = 0;
+    }
+    else {
+        offset = (parseInt(page) - 1) * 12
+    }
+
+    Media.findAndCountAll({
+        limit: 12,
+        offset: offset,
+        order: [
+            ['id', 'DESC']
+        ],
+        include: {model: User}
+    }).then((medias) => {
+
+        var next;
+
+        if(offset + 12 >= medias.count) {
+            next = false;
+        }
+        else {
+            next = true;
+        }
+
+
+        var result = {
+            page: parseInt(page),
+            next: next,
+        }
+        if(req.session.user) {
+    
+            User.findOne({
+                where: {
+                    name: req.session.user.name
+                }
+            }).then(user => {
+        
+                Category.findAll().then(categories => {
+                        
+                
+                    res.render("page", {categories: categories, medias: medias, user: user, result: result}); 
+                
+           
+                })
+            })
+        }
+            
+            
+    })
+})
+
 
 app.listen(PORT, () => {console.log(`Server listening at port: ${PORT}`)})

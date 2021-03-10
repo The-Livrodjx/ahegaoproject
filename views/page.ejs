@@ -18,7 +18,7 @@
             <div class="home-content">
 
                 <div class="cards">
-                    <% medias.forEach(media => { %>
+                    <% medias.rows.forEach(media => { %>
                       
                         <div class="card">
                             <video class="preview" ontimeupdate="getVideoDuration(this, '<%= media.slug %>') "width="150px" height="150px" src="<%= media.path %>"></video>
@@ -33,14 +33,23 @@
                         
                     <% }) %>
                 </div>
-            </div>
 
-            <a href="/page/2" class="button-secondary pure-button" style="position: absolute; bottom: 5%; right: 10%;margin-top: 50px; padding: 7px 19px; width: 200px; display: inline-flex;text-decoration: none;"><span style="margin-top: 10px; margin-right: 15px;">Next page</span><img src="/images/right-arrow.svg" alt="" width="50px" height="50px"></a>
+                <% if(result.page > 2) { %>
+                    <a href="/page/<%= result.page + 1 %>" class="button-secondary pure-button" style="position: absolute; bottom: 5%; left: 10%;margin-top: 50px; padding: 7px 19px; width: 200px; display: inline-flex;text-decoration: none;"><img src="/images/left-arrow.svg" alt="" width="50px" height="50px"><span style="margin-top: 10px; margin-left: 15px;">Prev page</span></a>
+                
+                <% } else if (result.page == 2){%>
+                    <a href="/" class="button-secondary pure-button" style="position: absolute; bottom: 5%; left: 10%;margin-top: 50px; padding: 7px 19px; width: 200px; display: inline-flex;text-decoration: none;"><img src="/images/left-arrow.svg" alt="" width="50px" height="50px"><span style="margin-top: 10px; margin-left: 15px;">Prev page</span></a>
+                <% } %>
+
+                <% if(result.next) {%>
+                    <a href="/page/<%= result.page + 1 %>" class="button-secondary pure-button" style="position: absolute; bottom: 5%; right: 10%;margin-top: 50px; padding: 7px 19px; width: 200px; display: inline-flex;text-decoration: none;"><span style="margin-top: 10px; margin-right: 15px;">Next page</span><img src="/images/right-arrow.svg" alt="" width="50px" height="50px"></a>
+                <% } %>
+            </div>
+            </div>
         </section>
 
         <%- include("./partials/footer.ejs") %>
     </body>
-    
 
     <script>
     
@@ -86,31 +95,12 @@
         }
 
         var allTheVideos = document.querySelectorAll('video.preview')
-        var valueOfTheLoop = allTheVideos.length // To fazendo isso pra arrumar o bug do window.onload aqui em baixo
-        // var videosDurations = []
-
+      
         allTheVideos.forEach((video, index) => {
 
-            // window.onload = (e) => {
-            //     console.log(video)
+     
 
-            //     var videosDurations = []        
-                    
-            //     for(i = 0; i < valueOfTheLoop; i++ ) {
-
-            //         videosDurations[i] = video.duration
-
-            // }
-            
-
-            // video.onloadeddata = function(e) {        
-                    
-                
-            //     video.duration;
-    
-            //     return videosDurations[index] = video.duration
-               
-            // };
+       
 
 
             video.onmouseover = (e) => {
@@ -129,25 +119,7 @@
             }
         
         })
-        
-        // document.querySelectorAll('div.card .test').forEach((print, index) => {
-            
-        //     console.log(videosDurations)
-        //     var tempo = videosDurations[index]
-        //     var horas = Math.floor(tempo / 3600);
-        //     var minutos = Math.floor((tempo - (horas * 3600)) / 60);
-        //     var segundos = Math.floor(tempo % 60);
-                    
-        //     if (horas < 10) horas = '0' + horas;
-        //     if (minutos < 10) minutos = '0' + minutos;
-        //     if (segundos < 10) segundos = '0' + segundos;
-
-                    
-                
-
-        //     return print.innerHTML = horas + ':' + minutos + ':' + segundos         
-        // })
-    
+ 
     </script>
       
 </html>
