@@ -16,14 +16,15 @@ section.home {
 
 section.home div.home-content {
     width: 100%;
-    min-height: 1200px;
+    min-height: 900px;
     height: auto;
     position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 400px;
+    margin-top: 300px;
+    margin-bottom: 200px;
 }
   
 div.cards {
