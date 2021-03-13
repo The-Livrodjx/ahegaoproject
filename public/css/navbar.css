@@ -2,18 +2,12 @@
     position: fixed;
     top: 0;
     background-color: #222;
+    color: whitesmoke;
     width: 100%;
     height: 120px;
     z-index: 100000;
     padding: 0px 20px;
     transition: all 0.3s ease;
-}
-
-.navbar.sticky {
-    border-bottom: 1px solid #023a8d0a;
-    padding: 2px;
-    margin: 0;
-    color: #fff;
 }
 
 .navbar .content {
@@ -37,6 +31,19 @@
     height: 150px;
 }
 
+form.searchBy {
+    display: block !important;
+    margin-left: -50px;
+    margin-top: 20px !important;
+}
+form.searchBy input.searchByTag {
+    margin-top: 5px;
+    padding: 7px 14px;
+    height: 40px;
+    color: #222;
+    width: 275px;
+}
+
 .navbar .menu-list {
     display: inline-flex;
 }
@@ -46,7 +53,7 @@
 }
 
 .menu-list li a {
-    color: var(--main-color);
+    color: whitesmoke;
     font-size: 18px;
     font-weight: 500;
     margin-left: 30px;
@@ -61,7 +68,7 @@
 }
 
 .menu-list li a:hover {
-    color: var(--second-color);
+    color: #c5c5c5;
 }
 
 .menu-list li a.contact:hover {
@@ -82,4 +89,24 @@
     right: 30px;
     top: 20px;
     color: #fff;
+}
+
+#outer-div{
+    margin: auto;
+    text-align: center;
+    width: 80px;
+    height: 30px;
+    border: 2px solid whitesmoke;
+    border-radius: 25px;
+}
+
+#inner-div{
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    border: 1px solid transparent;
+    background-color: whitesmoke;
+    border-radius: 50px;
+    position: relative;
+    bottom: 1px;
 }

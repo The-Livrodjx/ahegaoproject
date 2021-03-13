@@ -3,6 +3,8 @@ const authAdmin = require("../middlewares/authAdmin");
 const authUser = require("../middlewares/authUser");
 const slugify = require("slugify");
 const router = express.Router();
+const nhentai = require('nhentai-js')
+
 const { uuid } = require('uuidv4')
 const multer = require('multer')
 const Category = require("../categories/Category")
@@ -77,6 +79,34 @@ router.get("/newupload", authUser, (req, res) => {
         })
 
     })
+})
+
+router.get("/view/", authUser ,(req, res) => {
+    let hentaiTag = req.query.tag
+
+    if(hentaiTag !== null) {
+
+        nhentai.exists(hentaiTag).then(dojin => {
+
+            if(dojin !== undefined) {
+                nhentai.getDoujin(hentaiTag).then(content => {
+
+
+                
+
+                   
+                    res.render('medias/tag', {content})
+
+                })
+            }
+            
+        }).catch(err => {
+            
+            res.redirect('/')
+        })
+        
+    }
+
 })
 
 router.post('/uploadsave', authUser, uploadMultiple, function (req, res) {

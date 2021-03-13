@@ -2,13 +2,17 @@ const express = require("express");
 const session = require("express-session")
 const bodyParser = require("body-parser");
 const authUser = require("./middlewares/authUser")
-const { uuid } = require('uuidv4')
-const multer = require('multer')
+
 const app = express();
 
 const PORT = process.env.PORT || 6969
 
 const connection = require("./database/database")
+
+const hmtai = require("hmtai");
+
+const DabiImages = require("dabi-images");
+const DabiClient = new DabiImages.Client();
 
 const Category = require("./categories/Category");
 const categoriesController = require("./categories/CategoriesController");
@@ -160,14 +164,33 @@ app.get('/watch', authUser, (req, res) => {
         Media.findOne({
             where: {
                 id: id
-            }
+            },
+            include: {model: Category}
         }).then(media => {
 
             if(media !== undefined && media !== null) {
-                Category.findAll().then(categories => {
 
-                    res.render("media", {media: media, categories: categories})
-                })
+                if(req.session.user !== undefined) {
+                    User.findOne({
+                        where: {name: req.session.user.name}
+                    }).then(user => {
+                        Category.findAll().then(categories => {
+                            
+                            Media.findAll({
+                                where: {categoryId: media.category.id},
+                                limit: 8,
+                                order: [['id', 'DESC']],
+                                include: {model: User}
+                            }).then(videosRecent => {
+
+                                res.render("media", {media: media, categories: categories, user: user, title: media.category.title, medias: videosRecent})
+                            })
+                        
+                        })
+                    })
+            
+                }
+
             }
             else {
                 res.redirect("/")
@@ -238,6 +261,52 @@ app.get("/page/:num", authUser, (req, res) => {
             
             
     })
+})
+
+app.get("/testandoAPI", (req, res) => {
+
+    // DabiClient.nsfw.real.random().then(content => {
+    //     res.send(`<img src="${content.url}" width="500px" height="500px"><br>
+    //     <img src="${hmtai.neko()}" width="500px" height="500px">)
+    //     <img src="${hmtai.nsfw.ahegao()}" width="500px" height="500px">
+    //     <img src="${hmtai.nsfw.hentai()}" width="500px" height="500px">
+    //     <img src="${hmtai.nsfw.masturbation()}" width="500px" height="500px">
+    //     <img src="${hmtai.nsfw.tentacles()}" width="500px" height="500px">
+    //     <img src="${hmtai.nsfw.gif()}" width="500px" height="500px">`)
+    //     // outputs data with image url, possible source and other stuff
+    // }).catch(error => {
+    //     console.log(error);
+    //     // outputs error
+    // });
+
+    // const { HAnimeAPI } = require('hanime');
+    // const apiHentai = new HAnimeAPI();
+
+    // apiHentai.search('Masturbation').then(results => {
+
+    //     apiHentai.get_video(results.videos[0]).then(video => {
+
+    //         res.json(video)
+    //     })
+    // })
+
+
+    // nhentai.exists('255565').then(dojin => {
+
+    //     if(dojin !== undefined) {
+    //         nhentai.getDoujin('255565').then(content => {
+
+
+            
+
+    //            res.send(content.pages[0])
+
+    //         })
+    //     }
+        
+    // })
+    
+    res.send("<img src='https://hentaihaven.org/package/2017/12/HH-Kimekoi-Takane-no-Hana-to-Osananajimi-ga-Kimatta-Riyuu-Episode-2-DVD-80D6E29D.mp4_snapshot_12.30_2017.12.31_00.14.52-1024x576.png'>")
 })
 
 

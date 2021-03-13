@@ -4,19 +4,29 @@
 
       <div class="logo">
         <a href="/"><img src="/images/logo.png" alt=""></a>
-      </div>
 
+      
+      </div>
+      <form class="searchBy" action="/view"><input type="text" name="tag" class="searchByTag" placeholder="Procurar por tag"></form>
       <ul class="menu-list">
         <div class="icon cancel-btn">
           <i class="fas fa-times"></i>
         </div>
 
         <li><a class="scrollTo navLink" href="/">Home</a></li>
+
+    
         <% categories.forEach(category => { %>
           <li><a class="scrollTo navLink" href="/category/<%= category.slug %>"><%= category.title %></a></li>
         <% }) %>
+      
         <li><a class="scrollTo navLink" href="/profile/<%= user.name %>">Logado como: <%= user.name %></a></li>
         <li><a class="scrollTo navLink logout" href="/logout">Logout</a></li>
+        <li style="margin-left: 15px;">
+          <div id="outer-div">
+            <div id="inner-div"></div>
+          </div>
+        </li>
 
       </ul>
 

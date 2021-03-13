@@ -36,11 +36,17 @@ router.post('/authenticate', (req, res) => {
                 res.redirect("/")
             }
             else {
+            
                 res.redirect("/login")
             }
         }
         else {
-            res.redirect("/login")
+
+            let message = {
+                message: "Usuário já cadastrado",
+                type: "error"
+            }
+            res.redirect("/login", message)
         }
     }).catch(err => {
         res.redirect("/login")
