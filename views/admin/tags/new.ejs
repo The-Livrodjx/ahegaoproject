@@ -21,11 +21,11 @@
         <div class="container">
             <hr>
 
-            <h1>Cadastro de categoria</h2>
+            <h1>Cadastro de tag</h2>
 
 
             <form  method="POST" onsubmit="validaForm(event)">
-                <input type="text" class="form-control" name="title" placeholder="Defina o título da categoria"><br>
+                <input type="text" class="form-control" name="title" placeholder="Defina o título da tag"><br>
                 <button class="button-secondary pure-button">Cadastrar</button>
             </form>
 
@@ -46,7 +46,7 @@
             //contém no mínimo três caracteres.
             if(frm.target.title.value === "" || frm.target.title.value === null || frm.target.title.value.lenght < 3) {
                 //É mostrado um alerta, caso o campo esteja vazio.
-                alert("Por favor, digite um título de categoria.");
+                alert("Por favor, digite um título de tag.");
                 //Foi definido um focus no campo.
                 frm.target.title.focus();
                 //o form não é enviado.
@@ -66,7 +66,7 @@
             }
             else {
                 
-                frm.target.action = '/categories/save';
+                frm.target.action = '/tags/save';
                 frm.target.method = 'POST';
                 frm.target.submit();
             }

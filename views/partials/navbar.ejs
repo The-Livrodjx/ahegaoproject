@@ -1,39 +1,66 @@
-<nav class="navbar">
+<nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="/">
+      <img src="/images/logo.png" width="75" height="225">
+    </a>
 
-    <div class="content">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample"
+      onclick="document.querySelector('.navbar-menu').classList.toggle('is-active');">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
 
-      <div class="logo">
-        <a href="/"><img src="/images/logo.png" alt=""></a>
-
-      
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start" style="margin-right: 40px">
+      <div class="navbar-item">
+        <input class="input is-outlined" type="text" placeholder="Em breve...">
+        <button class="button is-outlined" style="transform: translateX(-10px);">Buscar</button>
       </div>
-      <form class="searchBy" action="/view"><input type="text" name="tag" class="searchByTag" placeholder="Procurar por tag"></form>
-      <ul class="menu-list">
-        <div class="icon cancel-btn">
-          <i class="fas fa-times"></i>
+    </div>
+
+
+    <div class="navbar-end">
+
+      <a class="navbar-item" href="/">
+        Home
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          Tags
+        </a>
+
+        <div class="navbar-dropdown is-arrowless">
+
+          <% tags.forEach(tag=> { %>
+            <a class="navbar-item" href="/tag/<%= tag.slug %>">
+              <%= tag.title %>
+            </a>
+            <% }) %>
+
         </div>
 
-        <li><a class="scrollTo navLink" href="/">Home</a></li>
 
-    
-        <% categories.forEach(category => { %>
-          <li><a class="scrollTo navLink" href="/category/<%= category.slug %>"><%= category.title %></a></li>
-        <% }) %>
-      
-        <li><a class="scrollTo navLink" href="/profile/<%= user.name %>">Logado como: <%= user.name %></a></li>
-        <li><a class="scrollTo navLink logout" href="/logout">Logout</a></li>
-        <li style="margin-left: 15px;">
-          <div id="outer-div">
-            <div id="inner-div"></div>
-          </div>
-        </li>
 
-      </ul>
-
-      <div class="icon menu-btn">
-        <i class="fas fa-bars"></i>
       </div>
 
-    </div>
-</nav>
+      <a class="navbar-item">
 
+        <div id="outer-div">
+          <div id="inner-div"></div>
+        </div>
+
+
+      </a>
+      <a class="navbar-item" href="/profile/<%= user.name %>">
+        Logado como: <%= user.name %>
+      </a>
+
+      <a class="navbar-item logout" href="/logout">
+        Logout
+      </a>
+    </div>
+  </div>
+</nav>

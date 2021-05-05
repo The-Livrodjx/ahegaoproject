@@ -24,7 +24,7 @@ section.footer a {
 }
 
 section.footer a:hover {
-    color: var(--button-color);
+    color: rgb(202, 60, 60);
 }
 
 section.footer span {

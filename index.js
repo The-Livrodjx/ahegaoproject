@@ -1,7 +1,9 @@
 const express = require("express");
 const session = require("express-session")
-const bodyParser = require("body-parser");
+const flash = require("express-flash")
 const authUser = require("./middlewares/authUser")
+
+const cors = require("cors")
 
 const app = express();
 
@@ -14,8 +16,8 @@ const hmtai = require("hmtai");
 const DabiImages = require("dabi-images");
 const DabiClient = new DabiImages.Client();
 
-const Category = require("./categories/Category");
-const categoriesController = require("./categories/CategoriesController");
+const Tag = require("./tags/Tag")
+const tagsController = require("./tags/TagsController")
 
 const User = require("./users/User");
 const usersController = require("./users/UsersController")
@@ -23,7 +25,18 @@ const usersController = require("./users/UsersController")
 const Media = require("./medias/Media")
 const mediasController = require("./medias/MediasController")
 
-const __rootpath = __dirname
+
+
+app.use(cors());
+
+
+// app.use((req, res, next) => {
+//     res.setHeader("Access-Control-Allow-Headers", "X-Requested-With,content-type, Accept,Authorization,Origin");
+//     res.setHeader("Access-Control-Allow-Origin", "*");
+//     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
+//     res.setHeader("Access-Control-Allow-Credentials", true);
+//     next();
+// });
 
 connection.
     authenticate()
@@ -42,13 +55,13 @@ app.use(session({
 app.set("view engine", 'ejs');
 
 app.use(express.static("public"))
-
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(flash())
+app.use(express.json())
+app.use(express.urlencoded({extended: false}));
 
 app.use('/', usersController)
-app.use('/', categoriesController)
 app.use('/', mediasController)
+app.use('/', tagsController)
 
 app.get("/", authUser, (req, res) => {
 
@@ -68,14 +81,14 @@ app.get("/", authUser, (req, res) => {
                 }
             }).then(user => {
     
-                Category.findAll().then(categories => {
+                Tag.findAll().then(tags => {
                     
                     // User.findOne({
                     //     where: {
                     //         id:  medias[0].userId
                     //     }
                     // }).then(author => {
-                    res.render("index", {categories: categories, medias: medias, user: user}); //, author: author.name}
+                    res.render("index", {tags: tags, medias: medias, user: user}); //, author: author.name}
                     // })
        
                 })
@@ -98,9 +111,9 @@ app.get("/watch/:slug", authUser, (req, res) => {
         }).then(media => {
 
             if(media !== undefined && media !== null) {
-                Category.findAll().then(categories => {
+                Tag.findAll().then(tags => {
 
-                    res.render("media", {media: media, categories: categories})
+                    res.render("media", {media: media, tags: tags})
                 })
             }
             else {
@@ -117,19 +130,18 @@ app.get("/watch/:slug", authUser, (req, res) => {
     }
 })
 
-app.get('/category/:slug', authUser,  (req, res) => {
+app.get('/tag/:slug', authUser,  (req, res) => {
 
     let slug = req.params.slug
 
-    Category.findOne({
+    Tag.findOne({
         where: {
             slug: slug
         },
-        include: [{model: Media, include: [{model: User}]}],
-    
+        include: [{model: Media, limit: 12, include: [{model: User}]}],
 
-    }).then(category => {
-        if(category !== undefined) {
+    }).then(tag => {
+        if(tag !== undefined) {
             
             if(req.session.user) {
 
@@ -138,9 +150,9 @@ app.get('/category/:slug', authUser,  (req, res) => {
                         name: req.session.user.name
                     }
                 }).then(user => {
-                    Category.findAll().then(categories => {
+                    Tag.findAll().then(tags => {
                 
-                        res.render('index', {categories: categories, medias: category.medias, user: user})
+                        res.render('index', {tags: tags, medias: tag.medias, user: user})
                     })
                 })
             }
@@ -165,7 +177,7 @@ app.get('/watch', authUser, (req, res) => {
             where: {
                 id: id
             },
-            include: {model: Category}
+            include: {model: Tag}
         }).then(media => {
 
             if(media !== undefined && media !== null) {
@@ -174,16 +186,16 @@ app.get('/watch', authUser, (req, res) => {
                     User.findOne({
                         where: {name: req.session.user.name}
                     }).then(user => {
-                        Category.findAll().then(categories => {
+                        Tag.findAll().then(tags => {
                             
                             Media.findAll({
-                                where: {categoryId: media.category.id},
+                                where: {tagId: media.tag.id},
                                 limit: 8,
                                 order: [['id', 'DESC']],
                                 include: {model: User}
                             }).then(videosRecent => {
 
-                                res.render("media", {media: media, categories: categories, user: user, title: media.category.title, medias: videosRecent})
+                                res.render("media", {media: media, tags: tags, user: user, title: media.tag.title, medias: videosRecent})
                             })
                         
                         })
@@ -249,12 +261,11 @@ app.get("/page/:num", authUser, (req, res) => {
                 }
             }).then(user => {
         
-                Category.findAll().then(categories => {
+                Tag.findAll().then(tags => {
                         
                 
-                    res.render("page", {categories: categories, medias: medias, user: user, result: result}); 
-                
-           
+                    res.render("page", {tags: tags, medias: medias, user: user, result: result}); 
+    
                 })
             })
         }
@@ -265,19 +276,20 @@ app.get("/page/:num", authUser, (req, res) => {
 
 app.get("/testandoAPI", (req, res) => {
 
-    // DabiClient.nsfw.real.random().then(content => {
-    //     res.send(`<img src="${content.url}" width="500px" height="500px"><br>
-    //     <img src="${hmtai.neko()}" width="500px" height="500px">)
-    //     <img src="${hmtai.nsfw.ahegao()}" width="500px" height="500px">
-    //     <img src="${hmtai.nsfw.hentai()}" width="500px" height="500px">
-    //     <img src="${hmtai.nsfw.masturbation()}" width="500px" height="500px">
-    //     <img src="${hmtai.nsfw.tentacles()}" width="500px" height="500px">
-    //     <img src="${hmtai.nsfw.gif()}" width="500px" height="500px">`)
-    //     // outputs data with image url, possible source and other stuff
-    // }).catch(error => {
-    //     console.log(error);
-    //     // outputs error
-    // });
+    DabiClient.nsfw.real.random().then(content => {
+        res.send(`<img src="${content.url}" width="500px" height="500px"><br>
+        <img src="${hmtai.neko()}" width="500px" height="500px">)
+        <img src="${hmtai.nsfw.ahegao()}" width="500px" height="500px">
+        <img src="${hmtai.nsfw.hentai()}" width="500px" height="500px">
+        <img src="${hmtai.nsfw.masturbation()}" width="500px" height="500px">
+        <img src="${hmtai.nsfw.tentacles()}" width="500px" height="500px">
+        <img src="${hmtai.nsfw.yuri()}" width="500px" height="500px">
+        <img src="${hmtai.nsfw.gif()}" width="500px" height="500px">`)
+        // outputs data with image url, possible source and other stuff
+    }).catch(error => {
+        console.log(error);
+        // outputs error
+    });
 
     // const { HAnimeAPI } = require('hanime');
     // const apiHentai = new HAnimeAPI();
@@ -306,7 +318,7 @@ app.get("/testandoAPI", (req, res) => {
         
     // })
     
-    res.send("<img src='https://hentaihaven.org/package/2017/12/HH-Kimekoi-Takane-no-Hana-to-Osananajimi-ga-Kimatta-Riyuu-Episode-2-DVD-80D6E29D.mp4_snapshot_12.30_2017.12.31_00.14.52-1024x576.png'>")
+    // res.send("<img src='https://hentaihaven.org/package/2017/12/HH-Kimekoi-Takane-no-Hana-to-Osananajimi-ga-Kimatta-Riyuu-Episode-2-DVD-80D6E29D.mp4_snapshot_12.30_2017.12.31_00.14.52-1024x576.png'>")
 })
 
 

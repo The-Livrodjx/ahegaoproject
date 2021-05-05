@@ -21,7 +21,7 @@
         <div class="container">
 
 
-            <h1>Cadastro de Medias</h2>
+            <h1>Adicionar vídeo</h2>
 
 
             <form onsubmit="validaForm(event)" enctype="multipart/form-data">
@@ -31,9 +31,9 @@
 
                 <label for="">Thumbnail: </label>
                 <input name="thumbnail" type="file" accept="image/*" required>
-                <select name="category" id="">
-                    <% categories.forEach(category => { %>
-                        <option value="<%= category.id %>"><%= category.title %></option>
+                <select name="tag" id="">
+                    <% tags.forEach(tag => { %>
+                        <option value="<%= tag.id %>"><%= tag.title %></option>
                     <% }) %>
                 </select>
                 <input type="hidden" name="id" value="<%= user.id %>">

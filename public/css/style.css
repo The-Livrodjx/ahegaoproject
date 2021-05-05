@@ -16,19 +16,20 @@ section.home {
 
 section.home div.home-content {
     width: 100%;
-    min-height: 900px;
+    min-height: 1100px;
     height: auto;
     position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 300px;
+    margin-top: 200px;
     margin-bottom: 200px;
 }
   
 div.cards {
     width: 100%;
+    height: auto;
     position: absolute;
     display: flex;
     justify-content: center;
@@ -37,7 +38,6 @@ div.cards {
 }
   
 div.card {
-    background-color: whitesmoke;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -52,7 +52,6 @@ div.card {
 }
   
 div.card h2 {
-    color: #222;
     padding: 5px;
     margin-bottom: 5px;
     font-size: 18px;
@@ -67,6 +66,7 @@ div.card video {
 div.card a {
     text-decoration: none;
     padding: 7px 5px;
+    color: whitesmoke;
 }
 
 

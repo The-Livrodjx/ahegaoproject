@@ -32,8 +32,8 @@
                 <label for="">Thumbnail: </label>
                 <input name="thumbnail" type="file" accept="image/*">
                 <select name="category" id="">
-                    <% categories.forEach(category => { %>
-                        <option value="<%= category.id %>"><%= category.title %></option>
+                    <% tags.forEach(tag => { %>
+                        <option value="<%= tag.id %>"><%= tag.title %></option>
                     <% }) %>
                 </select>
                 <button class="button-secondary pure-button" type="submit">Upload</button>

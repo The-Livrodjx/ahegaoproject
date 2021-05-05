@@ -7,7 +7,7 @@ const nhentai = require('nhentai-js')
 
 const { uuid } = require('uuidv4')
 const multer = require('multer')
-const Category = require("../categories/Category")
+const Tag = require("../tags/Tag")
 const Media = require("./Media")
 const User = require("../users/User")
 const fs = require('fs')
@@ -29,9 +29,9 @@ router.get("/admin/medias", authAdmin, (req, res) => {
 
 router.get("/admin/medias/new", authAdmin, (req, res) => {
 
-    Category.findAll().then(categories => {
+    Tag.findAll().then(tags => {
 
-        res.render("admin/medias/new", {categories: categories})
+        res.render("admin/medias/new", {tags: tags})
     })
 })
 
@@ -64,14 +64,14 @@ var uploadMultiple = upload.fields([{ name: 'media', maxCount: 1 }, { name: 'thu
 
 router.get("/newupload", authUser, (req, res) => {
 
-    Category.findAll().then(categories => {
+    Tag.findAll().then(tags => {
 
         User.findOne({
             where: {id: req.session.user.id}
         }).then(user => {
 
             if(user !== undefined) {
-                res.render("videos/new", {categories: categories, user: user})
+                res.render("videos/new", {tags: tags, user: user})
             }
         })
         .catch(err => {
@@ -81,11 +81,12 @@ router.get("/newupload", authUser, (req, res) => {
     })
 })
 
-router.get("/view/", authUser ,(req, res) => {
+router.get("/view/" ,(req, res) => {
     let hentaiTag = req.query.tag
 
     if(hentaiTag !== null) {
 
+        
         nhentai.exists(hentaiTag).then(dojin => {
 
             if(dojin !== undefined) {
@@ -95,8 +96,11 @@ router.get("/view/", authUser ,(req, res) => {
                 
 
                    
-                    res.render('medias/tag', {content})
-
+                    // res.render('medias/tag', {content})
+                    res.json(content)
+                  
+                }).catch(err => {
+                    console.log(err)
                 })
             }
             
@@ -106,18 +110,21 @@ router.get("/view/", authUser ,(req, res) => {
         })
         
     }
+    else {
+        res.redirect("/")
+    }
 
 })
 
 router.post('/uploadsave', authUser, uploadMultiple, function (req, res) {
 
     let title = req.body.title
-    let category = req.body.category
+    let tag = req.body.tag
     const filename  = req.files.media[0].fieldname
     const thumbnailFileName = req.files.thumbnail[0].fieldname
     let userId = req.body.id
     
-    if(title !== null || undefined && category !== null || undefined) {
+    if(title !== null || undefined && tag !== null || undefined) {
 
         Media.findOne({
             where: {
@@ -132,7 +139,7 @@ router.post('/uploadsave', authUser, uploadMultiple, function (req, res) {
                     slug: slugify(title),
                     path: `/uploads/${filename}`,
                     thumbnailPath: `/uploads/${thumbnailFileName}`,
-                    categoryId: category,
+                    tagId: tag,
                     userId: userId
                 }).then(() => {
         

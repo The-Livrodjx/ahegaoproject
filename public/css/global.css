@@ -1,7 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
-:root {
-    --main-color: whitesmoke;
-}
 
 * {
     margin: 0;
@@ -10,13 +7,41 @@
     font-family: 'Poppins', sans-serif;
 }
 
+html.dark {
+    background-color: #363636 !important;
+    color: whitesmoke !important;
+}
+
+html.dark div.card {
+    background-color: #363636 !important;
+    color: whitesmoke !important;
+}
+
+html.dark div.card a.author {
+    color: whitesmoke !important;
+}
+
+html.dark div.card a.watch-btn{
+    background-color: whitesmoke !important;
+    color: #363636 !important;
+}
+
+html.dark h1, h2 {
+    background-color: #363636 !important;
+    color: whitesmoke !important;
+}
+
 body {
     width: 100%;
     height: auto;
     min-height: 625px;
     display: flex;
     justify-content: center;
-    background-color: whitesmoke;
+
+}
+
+div.card a.author {
+    color: #222;
 }
 
 ::-webkit-scrollbar {
@@ -28,7 +53,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #222;
+    background: #363636;;
     
 }
 
@@ -96,3 +121,15 @@ form button:hover, a:hover {
     text-decoration: none;
 }
 
+.navbar-item img {
+    height: 225px;
+    max-height: 4rem !important;
+}
+
+.navbar-dropdown a.navbar-item {
+    padding-left: 0.5rem !important;
+}
+
+.navbar-end {
+    margin-right: 20px !important;
+}

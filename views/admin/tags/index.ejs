@@ -20,7 +20,7 @@
         
 
         <div class="container">
-            <h1>Categorias</h1>
+            <h1>Tags</h1>
        
         
 
@@ -36,17 +36,17 @@
 
 
                 <tbody>
-                    <% categories.forEach(category => { %>
+                    <% tags.forEach(tag => { %>
                         
                         <tr>
-                            <td><%= category.id %></td>
-                            <td><%= category.title %></td>
-                            <td><%= category.slug %></td>
+                            <td><%= tag.id %></td>
+                            <td><%= tag.title %></td>
+                            <td><%= tag.slug %></td>
                             <td>
-                                <a href="/admin/categories/edit/<%= category.id %>" class="button-secondary pure-button">Editar</a>
+                                <a href="/admin/tags/edit/<%= tag.id %>" class="button-secondary pure-button">Editar</a>
         
-                                <form method="POST" action="/categories/delete" style="display: inline;" onsubmit="confirmarDelecao(event, this)">
-                                    <input type="hidden" name="id" value="<%= category.id%>">
+                                <form method="POST" action="/tags/delete" style="display: inline;" onsubmit="confirmarDelecao(event, this)">
+                                    <input type="hidden" name="id" value="<%= tag.id%>">
                                     <button class="button-error pure-button">Deletar</button>
                                 </form>
                             
@@ -55,7 +55,7 @@
                     <% }) %>
                 </tbody>
             </table><br>
-            <a href="/admin/categories/new" class="button-success pure-button">Criar nova categoria</a><br>
+            <a href="/admin/tags/new" class="button-success pure-button">Criar nova tag</a><br>
         </div>
     </body>
 
@@ -65,7 +65,7 @@
 
             event.preventDefault();
 
-            let decision = confirm("Tem certeza que deseja excluir essa categoria ?")
+            let decision = confirm("Tem certeza que deseja excluir essa tag ?")
 
             if(decision) {
                 form.submit()

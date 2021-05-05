@@ -1,0 +1,78 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add @types/superagente
+
+PATH: 
+  C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Program Files\PuTTY\;C:\Program Files\dotnet\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\ProgramData\chocolatey\bin;C:\Program Files (x86)\Yarn\bin\;C:\Program Files\Git LFS;C:\Users\LivroDJX\AppData\Local\Programs\Python\Python39\Scripts\;C:\Users\LivroDJX\AppData\Local\Programs\Python\Python39\;C:\Program Files\MongoDB\Server\4.4\bin;C:\Users\LivroDJX\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\LivroDJX\AppData\Roaming\npm;C:\Program Files\heroku\bin;C:\Program Files\MySQL\MySQL Server 8.0\bin;C:\Users\LivroDJX\.dotnet\tools;C:\Users\LivroDJX\AppData\Local\Yarn\bin;
+
+Yarn version: 
+  1.22.5
+
+Node version: 
+  12.19.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/@types%2fsuperagente: Not found
+      at Request.params.callback [as _callback] (C:\Program Files (x86)\Yarn\lib\cli.js:66097:18)
+      at Request.self.callback (C:\Program Files (x86)\Yarn\lib\cli.js:140749:22)
+      at Request.emit (events.js:314:20)
+      at Request.<anonymous> (C:\Program Files (x86)\Yarn\lib\cli.js:141721:10)
+      at Request.emit (events.js:314:20)
+      at IncomingMessage.<anonymous> (C:\Program Files (x86)\Yarn\lib\cli.js:141643:12)
+      at Object.onceWrapper (events.js:420:28)
+      at IncomingMessage.emit (events.js:326:22)
+      at endReadableNT (_stream_readable.js:1223:12)
+      at processTicksAndRejections (internal/process/task_queues.js:84:21)
+
+npm manifest: 
+  {
+    "name": "ahegao",
+    "version": "1.0.0",
+    "description": "Site maneirissimo",
+    "main": "index.js",
+    "scripts": {
+      "start": "nodemon index.js"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/The-Livrodjx/ahegao.git"
+    },
+    "author": "Livrodjx & ShiroiGure",
+    "license": "ISC",
+    "bugs": {
+      "url": "https://github.com/The-Livrodjx/ahegao/issues"
+    },
+    "homepage": "https://github.com/The-Livrodjx/ahegao#readme",
+    "dependencies": {
+      "bcryptjs": "^2.4.3",
+      "body-parser": "^1.19.0",
+      "cors": "^2.8.5",
+      "dabi-images": "^2.7.5",
+      "ejs": "^3.1.6",
+      "express": "^4.17.1",
+      "express-session": "^1.17.1",
+      "fs": "0.0.1-security",
+      "googleapis": "^67.1.1",
+      "hanime": "^1.1.2",
+      "hmtai": "^2.0.4",
+      "multer": "^1.4.2",
+      "mysql2": "^2.2.5",
+      "nhentai-js": "^4.0.0",
+      "pornhub-api": "0.0.1",
+      "sequelize": "^6.5.0",
+      "slugify": "^1.4.7",
+      "uuid": "^8.3.2",
+      "uuidv4": "^6.2.6"
+    },
+    "devDependencies": {
+      "nodemon": "^2.0.7"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

@@ -1,5 +1,5 @@
 const express = require("express");
-
+const flash = require("express-flash")
 const router = express.Router();
 const bcrypt = require("bcryptjs")
 const User = require("./User");
@@ -7,9 +7,13 @@ const Media = require("../medias/Media")
 const authUser = require("../middlewares/authUser");
 
 
+
 router.get("/login", (req, res) => {
 
-    res.render('users/login')
+    var errorMessage = req.flash("errorMessage")
+    var errorMessage = (errorMessage == 0 || errorMessage == undefined) ? undefined : errorMessage
+
+    res.render('users/login', {errorMessage})
 })
 
 router.post('/authenticate', (req, res) => {
@@ -17,40 +21,61 @@ router.post('/authenticate', (req, res) => {
     let email = req.body.email 
     let password = req.body.password;
 
-    User.findOne({
-        where: {email: email}
-    }).then(user => {
+    var errorMessage;
+    
+    if(email == undefined || email == "" || email.length < 10) {
 
-        if(user !== undefined) {
+        errorMessage = "Por favor, digite um email válido"
+        req.flash("errorMessage", errorMessage)
+        res.redirect("/login")
 
-            var correct = bcrypt.compareSync(password, user.password)
-
-            if(correct) {
-
-                req.session.user = {
-                    id: user.id,
-                    name: user.name,
-                    email: user.email
+    }else if (password == undefined || password == "" || password.length < 3){
+        errorMessage = "Por favor, digite uma senha válida"
+        req.flash("errorMessage", errorMessage)
+        res.redirect("/login")
+    } 
+    else {
+        User.findOne({
+            where: {email: email}
+        }).then(user => {
+    
+            if(user !== undefined) {
+    
+                var correct = bcrypt.compareSync(password, user.password)
+    
+                if(correct) {
+    
+                    req.session.user = {
+                        id: user.id,
+                        name: user.name,
+                        email: user.email
+                    }
+    
+                    res.redirect("/")
                 }
-
-                res.redirect("/")
+                else {
+                    
+                    errorMessage = "Email ou senha incorretos"
+                    req.flash("errorMessage", errorMessage)
+                    res.redirect("/login")
+                }
             }
             else {
-            
+    
+                errorMessage = "Email ou senha incorretos"
+                req.flash("errorMessage", errorMessage)
+    
                 res.redirect("/login")
             }
-        }
-        else {
+        }).catch(err => {
+    
+            errorMessage = "Email ou senha incorretos"
+            req.flash("errorMessage", errorMessage)
+    
+            res.redirect("/login")
+        })
+    }
 
-            let message = {
-                message: "Usuário já cadastrado",
-                type: "error"
-            }
-            res.redirect("/login", message)
-        }
-    }).catch(err => {
-        res.redirect("/login")
-    })
 })
 
 
